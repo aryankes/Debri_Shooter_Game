@@ -1,3 +1,12 @@
+/*
+    author_name= Aryan Kesharwani
+    Roll_No= 2201CS19
+
+    Declaration of Authorship
+    This cpp file, gameplay.c, is part of the miniproject  phase2 of CS209/CS210 at the 
+    department of Computer Science and Engg, IIT Patna . 
+    
+*/
 #include <time.h>
 	// for(int i=80;i<160;i++){
 	// 	for(int j=80;j<160;j++){
@@ -15,6 +24,11 @@
 #define brick_size 10
 #define PUSHBUTTONS ((volatile long *) 0xFF200050)
 #define no_of_brick 32
+#define HEX3_HEX0_BASE ((volatile long *)	0xFF200020)
+#define HEX5_HEX4_BASE	((volatile long *) 0xFF200030)
+#define LEDR_BASE             0xFF200000
+volatile int * HEX3_HEX0_ptr = (int *) HEX3_HEX0_BASE;
+volatile int * HEX5_HEX4_ptr = (int *) HEX5_HEX4_BASE;
 int dis[240][320]={};
 volatile int * KEYS = PUSHBUTTONS;
 typedef struct{
@@ -23,6 +37,9 @@ typedef struct{
 }pair;
 pair shots[max_shots];
 int FLAG=0;
+int counter1;
+char seg7[10] =	{0b00111111, 0b00000110, 0b01011011, 0b01001111, 0b01100110, 
+						 0b01101101, 0b01111101, 0b00000111, 0b01111111, 0b01100111};
 void write_pixel(int x, int y, short colour) {
   volatile short *vga_addr=(volatile short*)(0x08000000 + (y<<10) + (x<<1));
   *vga_addr=colour;
@@ -180,6 +197,8 @@ int min(int a,int b){
 }
 int bullet[bul_size][bul_size]={};
 void collision(int z,int ls){
+	counter1++;
+	// while(1){}
 	int y=z,x=(ls+320)%320;x/=10;x*=10;
 	for(int i=y;i>=max(0,y-brick_size);i--){
 		for(int j=x;j<x+brick_size;j++){
@@ -239,6 +258,8 @@ void fire(int z,int ls,int k){
 				// }
 				shots[k].first=-1;
 				collision(z,ls);
+				
+
 				return;
 			}
 		}
@@ -274,59 +295,78 @@ void rounds(){
 		}
 	}
 }
-void start(){
-int k=0;char*ch;
-int k1=0;
-*ch="     ######  ####### ######  ######  ###         	 ";k1++;k=10;
-while(*ch){write_char(k++,k1,*ch);ch++;}
-*ch="     #     # #       #     # #     #  #             ";k1++;k=10;
-while(*ch){write_char(k++,k1,*ch);ch++;}
-*ch="     #     # #       #     # #     #  #             ";k1++;k=10;
-while(*ch){write_char(k++,k1,*ch);ch++;}
-*ch="     #     # #####   ######  ######   #             ";k1++;k=10;
-while(*ch){write_char(k++,k1,*ch);ch++;}
-*ch="     #     # #       #     # #   #    #             ";k1++;k=10;
-while(*ch){write_char(k++,k1,*ch);ch++;}
-*ch="     #     # #       #     # #    #   #             ";k1++;k=10;
-while(*ch){write_char(k++,k1,*ch);ch++;}
-*ch="     ######  ####### ######  #     # ###            ";k1++;k=10;
-while(*ch){write_char(k++,k1,*ch);ch++;}                                                                                             
-*ch="  #####                                            ";k1++;k=10;
-while(*ch){write_char(k++,k1,*ch);ch++;}                                              
-*ch=" #     # #    #  ####   ####  ##### ###### #####   ";k1++;k=10;
-while(*ch){write_char(k++,k1,*ch);ch++;}                                              
-*ch=" #       #    # #    # #    #   #   #      #    #  ";k1++;k=10;
-while(*ch){write_char(k++,k1,*ch);ch++;}                                              
-*ch="  #####  ###### #    # #    #   #   #####  #    #  ";k1++;k=10;
-while(*ch){write_char(k++,k1,*ch);ch++;}                                              
-*ch="       # #    # #    # #    #   #   #      #####   ";k1++;k=10;
-while(*ch){write_char(k++,k1,*ch);ch++;}                                              
-*ch=" #     # #    # #    # #    #   #   #      #   #   ";k1++;k=10;
-while(*ch){write_char(k++,k1,*ch);ch++;}                                              
-*ch="  #####  #    #  ####   ####    #   ###### #    #  ";k1++;k=10;
-while(*ch){write_char(k++,k1,*ch);ch++;}                                              
-                                                                                                    
+void start2(){
+	char *chr1="  HELLO PLAYER, A HUGE ASTEROID HAS BROKEN INTO SMALL PIECES.  ";
+	char *chr12="                IT IS APPROACHING YOUR CITY.                  ";
 
-	// char *chr1="DEBRI";
-	// char *chr2="SHOOTER";
-	
-	// for(int i=0;i<5;i++){
-	// 	write_char(33+i*2,20,chr1[i]);
-	// }
-	// for(int i=0;i<7;i++){
-	// 	write_char(31+i*2,22,chr2[i]);
-	// }
-	// int k=25;
+	char *chr2="            THERE IS NO TIME TO EVACUATE THE CITY              ";
+	char *chr22="      YOU MUST PROTECT YOUR CITY BY FIRING THE CANNON.        ";
+
+	char *chr3="       PREVENT THE FALLING DEBRI FROM HITTING THE CITY         ";
+	int i=10;
+	while(*chr1){
+		write_char(i,18,*chr1);
+		for(int j=0;j<500000;j++);
+		chr1++;i++;
+	}
+	i=10;
+	while(*chr12){
+		write_char(i,20,*chr12);
+		for(int j=0;j<500000;j++);
+		chr12++;i++;
+	}
+	i=10;
+	while(*chr2){
+		write_char(i,22,*chr2);
+		for(int j=0;j<500000;j++);
+		chr2++;i++;
+	}
+	i=10;
+	while(*chr22){
+		write_char(i,24,*chr22);
+		for(int j=0;j<500000;j++);
+		chr22++;i++;
+	}
+	i=10;
+	while(*chr3){
+		write_char(i,26,*chr3);
+		for(int j=0;j<500000;j++);
+		chr3++;i++;
+	}
+
+}
+void start(){
+	char *chr1="DEBRI";
+	char *chr2="SHOOTER";
+	for(int i=0;i<5;i++){
+		write_char(33+i*2,20,chr1[i]);
+	}
+	for(int i=0;i<7;i++){
+		write_char(31+i*2,22,chr2[i]);
+	}
+	int k=25;
 	
 }
 void gameover(){
+	
 	clear_screen();
 	clearchar();
+	char*chr2="Congratulations Your Score is";
 	char *chr1="G A M E   O V E R";
 	int k=29;
 	while(*chr1){
 		write_char(k++,22,*chr1);
 		chr1++;
+	}
+	k=22;
+	while(*chr2){
+		write_char(k++,24,*chr2);
+		chr2++;
+	}
+	k+=6;
+	while(counter1>0){
+		write_char(k--,24,counter1%10+'0');
+		counter1/=10;
 	}
 	for(int i=0;i<240;i++){
 		for(int j=0;j<320;j++){
@@ -336,6 +376,40 @@ void gameover(){
 	for(int i=0;i<no_of_brick;i++){
 		brick[i]=0;
 	}
+	counter1=0;
+}
+void controls(){
+	char *chr="                        C O N T R O L S                         ";
+	char *chr1="                   PRESS KEY 1 TO MOVE LEFT                    ";
+	char *chr12="                  PRESS KEY 4 TO MOVE RIGHT                   ";
+
+	char *chr2="                PRESS KEY 3 TO FIRE THE CANNON                 ";
+	int i=10;
+	while(*chr){
+		write_char(i,15,*chr);
+		for(int j=0;j<500000;j++);
+		chr++;i++;
+	}
+	i=10;
+	while(*chr1){
+		write_char(i,18,*chr1);
+		for(int j=0;j<500000;j++);
+		chr1++;i++;
+	}
+	i=10;
+	while(*chr12){
+		write_char(i,20,*chr12);
+		for(int j=0;j<500000;j++);
+		chr12++;i++;
+	}
+	i=10;
+	while(*chr2){
+		write_char(i,22,*chr2);
+		for(int j=0;j<500000;j++);
+		chr2++;i++;
+	}
+	i=10;
+	
 }
 int main(){
 	// for(int i=80;i<160;i++){
@@ -344,6 +418,11 @@ int main(){
 	// 	}
 	// }
 	// while(1){}
+	// counter1=10;
+	// volatile int* sw=LEDR_BASE;
+	// *sw=0b10001;
+	*HEX3_HEX0_ptr=0;*HEX5_HEX4_ptr=0;
+	counter1=0;
 	srand(time(0));
 	clear_screen();
 	clearchar();
@@ -354,22 +433,65 @@ int main(){
 			bullet[i][j]=1;
 		}
 	}
-	
-	
 	long pb=KEYS[0];
 	start();
 	while(1){
 		pb=KEYS[0];
+		if(pb==4||pb==6||pb==5){
+			break;
+		}
 		char *chr3="Press 2nd Key to continue";
 		int k=25;
 		while(*chr3){
-			write_char(k++,25,*chr3);
+			write_char(k++,28,*chr3);
 			chr3++;
 		}
-		for(int i=0;i<2000000;i++){}
+		for(int i=0;i<5000000;i++){}
 		for(int i=0;i<80;i++){
-			write_char(i,25,'\0');
+			write_char(i,28,'\0');
 		}
+		for(int i=0;i<5000000;i++){}
+	}
+	clearchar();
+	start2();
+	while(1){
+		pb=KEYS[0];
+		if(pb==4||pb==6||pb==5){
+			break;
+		}
+		char *chr3="Press 2nd Key to continue";
+		int k=25;
+		while(*chr3){
+			write_char(k++,28,*chr3);
+			chr3++;
+		}
+		for(int i=0;i<5000000;i++){}
+		for(int i=0;i<80;i++){
+			write_char(i,28,'\0');
+		}
+		for(int i=0;i<5000000;i++){}
+	}
+	clearchar();
+	controls();
+	while(1){
+		pb=KEYS[0];
+		char *chr3="Press 2nd Key to Begin Game ";
+		int k=25;
+		while(*chr3){
+			write_char(k++,28,*chr3);
+			chr3++;
+		}
+		for(int i=0;i<5000000;i++){}
+		for(int i=0;i<80;i++){
+			write_char(i,28,'\0');
+		}
+		*HEX5_HEX4_ptr=0,*HEX3_HEX0_ptr=0;
+		*HEX5_HEX4_ptr |= seg7[counter1/100000];counter1%=100000;
+		*HEX5_HEX4_ptr |= seg7[counter1/10000] << 8;counter1%=10000;
+		*HEX3_HEX0_ptr |= seg7[counter1/1000]<<24;counter1%=1000;
+		*HEX3_HEX0_ptr |= seg7[counter1/100]<<16;counter1%=100;
+		*HEX3_HEX0_ptr |= seg7[counter1/10]<<8;counter1%=10;
+		*HEX3_HEX0_ptr |= seg7[counter1];
 		for(int i=0;i<2000000;i++){}
 		if(!(pb==4||pb==12||pb==6||pb==5)){
 			continue;
@@ -395,7 +517,9 @@ int main(){
 		int count=0;
 		int flag=0;
 		int flag2=0;	
+		int ll=counter1;
 		while(1){
+			
 			pb=KEYS[0];
 			if(pb==2||pb==3||pb==10||pb==11){
 				flag=1;
@@ -410,6 +534,16 @@ int main(){
 						break;
 					}
 				}
+			}
+			if(counter1!=ll){
+				ll=counter1;
+				*HEX5_HEX4_ptr=0,*HEX3_HEX0_ptr=0;
+				*HEX5_HEX4_ptr |= seg7[ll/100000];ll%=100000;
+				*HEX5_HEX4_ptr |= seg7[ll/10000] << 8;ll%=10000;
+				*HEX3_HEX0_ptr |= seg7[ll/1000]<<24;ll%=1000;
+				*HEX3_HEX0_ptr |= seg7[ll/100]<<16;ll%=100;
+				*HEX3_HEX0_ptr |= seg7[ll/10]<<8;ll%=10;
+				*HEX3_HEX0_ptr |= seg7[ll];
 			}
 			if(pb==1){
 				flag2=0;lset++;lset%=320;
@@ -430,7 +564,7 @@ int main(){
 				}
 			}
 			for(int i=0;i<4;i++){
-				for(int j=0;j<7000;j++){
+				for(int j=0;j<10000;j++){
 
 				}
 				rounds();
@@ -440,6 +574,7 @@ int main(){
 				brick_refresh();
 			}
 			if(FLAG==0){
+				lset=0;
 				gameover();
 				break;
 			}
@@ -451,8 +586,8 @@ int main(){
 					brick_generator(z);
 				}
 			}
-			for(int i=0;i<70000;i++){
-
+			for(int i=0;i<140000;i++){
+				
 			}
 			
 		}
