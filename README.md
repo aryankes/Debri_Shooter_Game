@@ -37,7 +37,7 @@ This game, built exclusively in C, is a single-stack project that showcases the 
 
 [Watch the live Demo using DE1-SOC Board and VGA Display](https://drive.google.com/file/d/1cM36V7A2YiYvs7pn3hbtUmAAap4LHTOE/view?usp=sharing)
 
-[Watch the Demo using Simulator](https://drive.google.com/file/d/1cM36V7A2YiYvs7pn3hbtUmAAap4LHTOE/view?usp=sharing)
+[Watch the Demo using Simulator](https://www.loom.com/share/f0f791e1c720454d941af72321134c2b?sid=7d01ddfb-227b-4a8b-a24e-ceb4c7159c49)
 
 *Click the link to watch the demo video*
 
